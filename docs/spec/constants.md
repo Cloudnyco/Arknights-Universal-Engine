@@ -32,3 +32,9 @@
 - **每帧时长**：一帧是 1/30 秒（`TICK`，时间-1）。
 
 - 来源：[PRTS「游戏数据基础」oldid=440563](https://prts.wiki/index.php?title=%E6%B8%B8%E6%88%8F%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80&oldid=440563)：「move_multiplier 默认值为0.5」
+
+### 常量-6 敌方碰撞半径
+
+普通敌人的碰撞体积是半径 0.1 格的圆（`ENEMY_COLLIDER_RADIUS`），我方的范围按它判定（体积-5）。
+
+- 来源：官方客户端的敌人战斗预制体（battle/enm_pfb*.ab）里的 CircleCollider2D：2152 个预制体中 2117 个半径为 0.1，本引擎各关卡的 120 种敌人全部是 0.1；其余 35 个（半径 0.09～0.4、1.48，或没有圆形碰撞体）都不在这些关卡里；[PRTS「作战机制」oldid=433935](https://prts.wiki/index.php?title=%E4%BD%9C%E6%88%98%E6%9C%BA%E5%88%B6&oldid=433935)「碰撞体积与位置识别」：「索敌抬手等均使用碰撞箱」

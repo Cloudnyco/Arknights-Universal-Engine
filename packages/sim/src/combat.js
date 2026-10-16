@@ -53,7 +53,7 @@ export function targetsOf(w, c, op) {
   const held = (/** @type {Unit} */ u) => t.blockedFirst && u.blockedBy === op.id, air = t.idleAirOnly && !inSkill(op), any = { canHitFly: true }, sel = { canHitFly: t.antiAir };
   const bySummon = t.summonBlocked ? summonHeld(w, op) : () => false, skip = traitSkip(w, c, op);
   const cands = w.units.filter((u) => hostile(u)
-    && ((held(u) && selectable(u, any)) || ((bySummon(u) || (inKeys(u, keys, grid) && (!air || statsOf(u).flying))) && selectable(u, sel))) && !skip?.(u));
+    && ((held(u) && selectable(u, any)) || ((bySummon(u) || (inKeys(u, keys, grid, t.rangeTiles) && (!air || statsOf(u).flying))) && selectable(u, sel))) && !skip?.(u));
   return fortressTargets(w, c, op, sortEnemies(op, cands, { blockedFirst: t.blockedFirst, pathDist: (e) => pathDistance(c, e), filter: t.filter, secondary: t.secondary }));
 }
 

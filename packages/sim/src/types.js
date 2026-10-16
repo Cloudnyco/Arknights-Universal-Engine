@@ -166,6 +166,8 @@
  * @property {number} summonBlockedScale its attack's 倍率 against an enemy one of its own summons blocks is multiplied by
  *   this (职业-14)
  * @property {boolean} trapTiles its summons cannot be deployed on a tile a ground enemy stands on (职业-14)
+ * @property {boolean} rangeTiles its normal attack searches its range by the tile of each enemy's position, not by its
+ *   collider (体积-5: 谬因)
  * @property {{ duration: number, switch: number, atk: number, maxHp: number } | null} doll brought to 0 HP in its own form it
  *   switches (`switch` seconds) to its 替身, which fights `duration` seconds with attack and maximum HP + `atk`, `maxHp`
  *   (直接乘算), then switches back (职业-15)

@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createWorld, step, traits, attrs } from '@aue/sim';
 import { tinyContent } from '@aue/testkit';
-import { BRANCHES, coveredBranch, withTrait, skeletonContent, loadTraining, operatorAt } from '../src/index.js';
+import { BRANCHES, coveredBranch, withTrait, withOwnTrait, OPERATOR_TRAITS, skeletonContent, loadTraining, operatorAt, matchContent } from '../src/index.js';
 
 /** @type {Record<string, { name: string, profession: string, position: string[] }>} */
 const ALL = JSON.parse(readFileSync(new URL('fixtures/branches.json', import.meta.url), 'utf8')).branches;
@@ -149,4 +149,16 @@ test('[职业-7] [职业-15] 傀儡师 from the real data: a 20 s 替身, 1 s sw
   assert.deepEqual(traits.traitOfDef(await real('char_369_bena')).doll, { duration: 20, switch: 1, atk: 0, maxHp: 0 });
   const t = await loadTraining('char_369_bena'), y = traits.traitOfDef(operatorAt(t, { elite: 2, level: 60, potential: 1, trust: 0, skill: 0, skillLevel: 7, module: 0, moduleLevel: 1 }));
   assert.deepEqual(y.doll, { duration: 20, switch: 1, atk: 0, maxHp: 0.2 });
+});
+
+test('[职业-7] [体积-5] 谬因 searches by tile: her own trait data over her 轰击术师 trait, in a match\'s records too; others keep theirs', async () => {
+  assert.deepEqual(Object.keys(OPERATOR_TRAITS), ['char_4229_aphris']);
+  const aphris = await real('char_4229_aphris'), t = traits.traitOfDef(withOwnTrait('char_4229_aphris', aphris));
+  assert.deepEqual([t.rangeTiles, t.filter, t.targets, traits.traitOfDef(aphris).rangeTiles], [true, 'ALL', 'all', false]);
+  const sniper = await real('char_1021_kroos2');
+  assert.equal(withOwnTrait('char_1021_kroos2', sniper), sniper);
+  const build = { elite: 2, level: 1, potential: 1, trust: 0, skill: 0, skillLevel: 1 };
+  const ops = /** @type {Record<string, any>} */ ((await matchContent({ level: 'act1multi_01', difficulty: 'NORMAL', seed: 1,
+    decks: [[{ id: 'char_4229_aphris', build }, { id: 'char_1021_kroos2', build }]] })).operators);
+  assert.deepEqual([traits.traitOfDef(ops['char_4229_aphris#0']).rangeTiles, traits.traitOfDef(ops['char_1021_kroos2#0']).rangeTiles], [true, false]);
 });
